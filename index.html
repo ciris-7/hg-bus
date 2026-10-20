@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e1014">
-<meta name="description" content="皇岗口岸到岭南大学的巴士路线：44B 到兆康苑，转 67M 或步行，实时班次。">
+<meta name="description" content="皇岗口岸到岭南大学或怡乐花园：44B 到兆康苑，转 67M；周末可坐城巴 B15。实时班次，每 30 秒更新。">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>皇岗口岸 → 岭南大学 · 44B + 67M</title>
+<title>皇岗口岸 → 岭南大学 / 怡乐花园 · 44B + 67M</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ffc72c'/%3E%3Ctext x='32' y='43' font-family='-apple-system,Helvetica,sans-serif' font-size='25' font-weight='800' text-anchor='middle' fill='%2314100a'%3E44B%3C/text%3E%3C/svg%3E">
 <style>
   :root {
@@ -20,6 +20,7 @@
     --faint: #5c6577;
     --yellow: #ffc72c;
     --red: #e8452c;
+    --blue: #2f6fe4;
     --green: #38d39f;
   }
 
@@ -142,9 +143,45 @@
     100% { box-shadow: 0 0 0 0 rgba(56, 211, 159, 0); }
   }
 
+  /* ---------- destination switch ---------- */
+  .dest {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    margin-top: 16px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    background: rgba(255, 255, 255, .035);
+  }
+
+  .dest button {
+    appearance: none;
+    border: 0;
+    margin: 0;
+    padding: 9px 8px;
+    border-radius: 11px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 650;
+    letter-spacing: .01em;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+
+  .dest button.is-active {
+    background: var(--card-hi);
+    color: var(--text);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
+  }
+
+  .dest button:focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; }
+
   /* ---------- hero ---------- */
   .hero {
-    margin-top: 20px;
+    margin-top: 10px;
     padding: 20px 20px 18px;
     border: 1px solid var(--line);
     border-radius: 22px;
@@ -235,11 +272,9 @@
 
   .chip b { color: var(--text); font-weight: 600; }
 
-  .chip.is-warn { color: #ffb4a4; border-color: rgba(232, 69, 44, .4); }
-
   /* ---------- plan ---------- */
   .plan {
-    margin-top: 14px;
+    margin-top: 12px;
     padding: 20px;
     border: 1px solid var(--line);
     border-radius: 22px;
@@ -293,6 +328,8 @@
     background: rgba(56, 211, 159, .055);
   }
 
+  .option.is-off { opacity: .62; }
+
   .o-title {
     display: flex;
     align-items: center;
@@ -300,6 +337,18 @@
     font-size: 14px;
     font-weight: 650;
   }
+
+  .rt {
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    padding: 2.5px 6px;
+    border-radius: 5px;
+    color: #fff;
+    background: var(--red);
+  }
+
+  .rt.is-b15 { background: var(--blue); }
 
   .tag {
     font-size: 9px;
@@ -339,11 +388,11 @@
     margin-top: 1px;
   }
 
-  .o-time.is-empty { color: var(--faint); font-size: 15px; }
+  .o-time.is-empty { color: var(--faint); font-size: 14px; }
 
   /* ---------- steps ---------- */
   .steps {
-    margin-top: 14px;
+    margin-top: 12px;
     padding: 18px 20px 16px;
     border: 1px solid var(--line);
     border-radius: 22px;
@@ -371,7 +420,7 @@
     box-shadow: 0 0 0 4px rgba(255, 199, 44, .12);
   }
 
-  .step:nth-child(4)::before { background: var(--red); box-shadow: 0 0 0 4px rgba(232, 69, 44, .12); }
+  .step:nth-child(3)::before { background: var(--red); box-shadow: 0 0 0 4px rgba(232, 69, 44, .12); }
   .step:last-child::before { background: var(--green); box-shadow: 0 0 0 4px rgba(56, 211, 159, .12); }
 
   .step:not(:last-child)::after {
@@ -502,14 +551,19 @@
       <span class="badge b67">67M</span>
     </div>
     <div class="route-text">
-      <h1>皇岗口岸 <span class="arrow">→</span> 岭南大学</h1>
-      <p>44B 到兆康苑 · 转 67M / 步行</p>
+      <h1>皇岗口岸 <span class="arrow">→</span> <span id="destTitle">岭南大学</span></h1>
+      <p>44B 到兆康苑 · 转 67M / 城巴 B15</p>
     </div>
     <div class="live" id="live" title="实时数据">
       <span class="dot"></span>
       <span id="liveLabel">实时</span>
     </div>
   </header>
+
+  <div class="dest" role="tablist" aria-label="选择目的地">
+    <button type="button" role="tab" data-dest="lingnan" aria-selected="true" class="is-active">岭南大学</button>
+    <button type="button" role="tab" data-dest="yeelok" aria-selected="false">怡乐花园</button>
+  </div>
 
   <section class="hero" aria-labelledby="heroLabel">
     <div class="eyebrow">
@@ -526,7 +580,7 @@
 
   <section class="plan" aria-labelledby="planLabel">
     <div class="eyebrow">
-      <span id="planLabel">预计到达 · 岭南大学</span>
+      <span id="planLabel">预计到达 · <span id="planDest">岭南大学</span></span>
       <span class="zh">最佳方案</span>
     </div>
     <div class="arrive">
@@ -535,15 +589,22 @@
     </div>
 
     <div class="options">
+      <div class="option" id="optBus">
+        <div class="o-title"><span class="rt">67M</span> 转车 <span class="tag" id="tagBus" hidden>推荐</span></div>
+        <div class="o-detail" id="busDetail">欣田邨上车 · 嶺南大學</div>
+        <div class="o-time" id="busTime">--:--<small>到达</small></div>
+      </div>
+
       <div class="option" id="optWalk">
         <div class="o-title">步行到校 <span class="tag" id="tagWalk" hidden>推荐</span></div>
         <div class="o-detail" id="walkDetail">1.0 km · 约 13 分钟 · 经兆康路 → 屯富路</div>
         <div class="o-time" id="walkTime">--:--<small>到达</small></div>
       </div>
-      <div class="option" id="optBus">
-        <div class="o-title">同站转 67M <span class="tag" id="tagBus" hidden>推荐</span></div>
-        <div class="o-detail" id="busDetail">欣田邨上车 · 3 站 · 约 6 分钟</div>
-        <div class="o-time" id="busTime">--:--<small>到达</small></div>
+
+      <div class="option" id="optB15">
+        <div class="o-title"><span class="rt is-b15">B15</span> 城巴直达 <span class="tag" id="tagB15" hidden>推荐</span></div>
+        <div class="o-detail" id="b15Detail">仅周六日及公众假期行驶</div>
+        <div class="o-time is-empty" id="b15Time">—<small>停开</small></div>
       </div>
     </div>
   </section>
@@ -560,21 +621,21 @@
       <p>第 3 个站下车（车程约 10 分钟）。同组站就是 67M 的「欣田邨」站，可能要过马路。</p>
     </div>
     <div class="step">
-      <h3>转 67M 或步行</h3>
-      <p><b>67M</b> 往葵芳站方向，3 个站到岭南大学（约 6 分钟，约 $6）；或步行 1.0 km、约 13 分钟。</p>
+      <h3 id="step3Title">转 67M 到岭南大学</h3>
+      <p id="step3Text">67M 往葵芳站方向，3 个站到「岭南大学」（约 6 分钟，约 $6）。</p>
     </div>
     <div class="step">
-      <h3>岭南大学</h3>
-      <p>67M 停在青山公路正门；步行可到屯富路入口。校园在山坡上，预留几分钟。</p>
+      <h3 id="step4Title">岭南大学</h3>
+      <p id="step4Text">67M 停在青山公路正门；步行可到屯富路入口。校园在山坡上，预留几分钟。</p>
     </div>
   </section>
 
   <footer>
     <div class="facts">
+      <p><b>路线</b> 44B 是专线小巴（GMB），67M 是九巴（KMB）；城巴 B15 只在周六、日及公众假期行驶，直达虎地。</p>
       <p><b>班次</b> 44B 06:30–22:59，15–20 分钟一班；深夜可坐 N44B（同样停兆康苑）。</p>
-      <p><b>车费</b> 44B $15.7 · 67M 约 $6 · 八达通 / AlipayHK。</p>
-      <p><b>提醒</b> 以上是港方口岸区上车时间，未计过关；44B 是 16 座小巴，行李多可能要等下一班。</p>
-      <p><b>数据</b> data.gov.hk（KMB / GMB）· 每 30 秒自动更新。</p>
+      <p><b>车费</b> 44B $15.7 · 67M 约 $6 · B15 $15.5 · 八达通 / AlipayHK。</p>
+      <p><b>数据</b> DATA.GOV.HK（城巴 B15 / 九巴 67M / 专线小巴 44B）· 每 30 秒自动更新。</p>
     </div>
 
     <div class="error" id="error"></div>
@@ -602,13 +663,46 @@
     p44: "https://data.etagmb.gov.hk/eta/route-stop/2004164/1/1",
     p44kw: "https://data.etagmb.gov.hk/eta/route-stop/2004164/1/3",
     n44b: "https://data.etagmb.gov.hk/eta/route-stop/2004165/1/1",
-    m67: "https://data.etabus.gov.hk/v1/transport/kmb/eta/580D52F4D93CAD9B/67M/1"
+    m67: "https://data.etabus.gov.hk/v1/transport/kmb/eta/580D52F4D93CAD9B/67M/1",
+    b15: "https://rt.data.gov.hk/v2/transport/citybus/eta/CTB/003939/B15",
+    b15arr: "https://rt.data.gov.hk/v2/transport/citybus/eta/CTB/003656/B15"
   };
 
   const REFRESH_MS = 30_000;
   const RIDE_44_MS = 10 * 60_000;
-  const WALK_MS = 13 * 60_000;
-  const RIDE_67_MS = 6 * 60_000;
+
+  const PLANS = {
+    lingnan: {
+      name: "岭南大学",
+      stop: "嶺南大學",
+      ride67: 6 * 60_000,
+      walk67: 2 * 60_000,
+      walkFromKwai: 13 * 60_000,
+      b15Ride: 22 * 60_000,
+      b15Walk: 3 * 60_000,
+      b15WalkMin: 3,
+      b15Note: "虎地落车 · 步行 3 分钟",
+      step3Title: "转 67M 到岭南大学",
+      step3Text: "67M 往葵芳站方向，3 个站到「岭南大学」（约 6 分钟，约 $6）；或步行 1.0 km、约 13 分钟。",
+      step4Title: "岭南大学",
+      step4Text: "67M 停在青山公路正门；步行可到屯富路入口。校园在山坡上，预留几分钟。"
+    },
+    yeelok: {
+      name: "怡乐花园",
+      stop: "景峰花園",
+      ride67: 10 * 60_000,
+      walk67: 4 * 60_000,
+      walkFromKwai: 0,
+      b15Ride: 22 * 60_000,
+      b15Walk: 14 * 60_000,
+      b15WalkMin: 14,
+      b15Note: "虎地落车 · 步行 14 分钟（或屯门站转的士）",
+      step3Title: "转 67M 到景峰花园",
+      step3Text: "67M 往葵芳站方向，5 个站到「景峰花园」（约 10 分钟，约 $7）；下车步行约 4 分钟到怡乐花园。",
+      step4Title: "怡乐花园",
+      step4Text: "在「景峰花园」下车后，沿景峰径步行约 280 米；不想走路可在屯门站转的士（约 $40）。"
+    }
+  };
 
   const $ = (id) => document.getElementById(id);
   const numEl = $("num");
@@ -620,18 +714,29 @@
   const arriveNoteEl = $("arriveNote");
   const walkTimeEl = $("walkTime");
   const busTimeEl = $("busTime");
+  const b15TimeEl = $("b15Time");
   const walkDetailEl = $("walkDetail");
   const busDetailEl = $("busDetail");
+  const b15DetailEl = $("b15Detail");
   const optWalkEl = $("optWalk");
   const optBusEl = $("optBus");
+  const optB15El = $("optB15");
   const tagWalkEl = $("tagWalk");
   const tagBusEl = $("tagBus");
+  const tagB15El = $("tagB15");
   const stampEl = $("stamp");
   const countdownEl = $("countdown");
   const liveEl = $("live");
   const liveLabelEl = $("liveLabel");
   const errorEl = $("error");
   const refreshBtn = $("refresh");
+  const destTitleEl = $("destTitle");
+  const planDestEl = $("planDest");
+  const step3TitleEl = $("step3Title");
+  const step3TextEl = $("step3Text");
+  const step4TitleEl = $("step4Title");
+  const step4TextEl = $("step4Text");
+  const destButtons = Array.from(document.querySelectorAll(".dest button"));
 
   const clockFmt = new Intl.DateTimeFormat("zh-HK", {
     timeZone: TZ, hour: "2-digit", minute: "2-digit", hour12: false
@@ -642,19 +747,25 @@
     p44kw: [],
     n44b: [],
     m67: [],
+    b15: [],
+    b15arr: [],
     updated: 0,
     error: ""
   };
 
+  let dest = localStorage.getItem("hg-dest") === "yeelok" ? "yeelok" : "lingnan";
   let nextLoad = Date.now() + REFRESH_MS;
   let loading = false;
 
   const clock = (ms) => clockFmt.format(new Date(ms));
-
   const mins = (ms) => Math.max(0, Math.round((ms - Date.now()) / 60_000));
 
   function future(list, now) {
     return list.filter((t) => t > now - 30_000).sort((a, b) => a - b);
+  }
+
+  function nextAfter(list, t) {
+    return list.find((x) => x >= t) || 0;
   }
 
   async function getJSON(url) {
@@ -677,9 +788,7 @@
     const now = Date.now();
     const rows = json && json.data && Array.isArray(json.data.eta) ? json.data.eta : [];
     return future(
-      rows
-        .map((e) => Date.parse(e.timestamp))
-        .filter((t) => Number.isFinite(t)),
+      rows.map((e) => Date.parse(e.timestamp)).filter((t) => Number.isFinite(t)),
       now
     );
   }
@@ -696,21 +805,42 @@
     );
   }
 
-  function setLive(ok) {
-    liveEl.classList.toggle("is-stale", !ok);
-    liveLabelEl.textContent = ok ? "实时" : "离线";
+  function parseCitybus(json) {
+    const now = Date.now();
+    const rows = json && Array.isArray(json.data) ? json.data : [];
+    return future(
+      rows.map((e) => Date.parse(e.eta)).filter((t) => Number.isFinite(t)),
+      now
+    );
+  }
+
+  function syncDestUI() {
+    const p = PLANS[dest];
+    destButtons.forEach((btn) => {
+      const on = btn.dataset.dest === dest;
+      btn.classList.toggle("is-active", on);
+      btn.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    destTitleEl.textContent = p.name;
+    planDestEl.textContent = p.name;
+    step3TitleEl.textContent = p.step3Title;
+    step3TextEl.textContent = p.step3Text;
+    step4TitleEl.textContent = p.step4Title;
+    step4TextEl.textContent = p.step4Text;
+    optWalkEl.style.display = p.walkFromKwai ? "" : "none";
+    walkDetailEl.textContent = "1.0 km · 约 13 分钟 · 经兆康路 → 屯富路";
   }
 
   function render() {
     const now = Date.now();
-    const p44 = state.p44;
-    const n44b = state.n44b;
-    const useNight = p44.length === 0 && n44b.length > 0;
-    const list = useNight ? n44b : p44;
-    const next = list[0];
+    const useNight = state.p44.length === 0 && state.n44b.length > 0;
+    const list = useNight ? state.n44b : state.p44;
+    const next = list[0] || 0;
 
+    syncDestUI();
     heroClockEl.textContent = "现在 " + clock(now);
 
+    // ---- next 44B ----
     if (!next) {
       numEl.textContent = "—";
       numEl.className = "num is-empty";
@@ -725,10 +855,9 @@
       unitEl.textContent = m <= 0 ? "" : "min";
 
       const routeName = useNight ? "N44B" : "44B";
-      const kwArr = next + RIDE_44_MS;
       subEl.innerHTML =
         "<b>" + clock(next) + "</b> " + routeName +
-        " 由皇岗口岸开出 · 约 <b>" + clock(kwArr) + "</b> 到兆康苑";
+        " 由皇岗口岸开出 · 约 <b>" + clock(next + RIDE_44_MS) + "</b> 到兆康苑";
 
       const rest = list.slice(1, 4);
       timesEl.innerHTML = rest.length
@@ -738,47 +867,87 @@
         : '<span class="chip">暂无后续班次</span>';
     }
 
-    // ---- arrival estimate ----
-    const base = next ? next + RIDE_44_MS : 0;
-    const walkArr = base ? base + WALK_MS : 0;
+    // ---- arrival plan ----
+    const cfg = PLANS[dest];
+    const kw = next ? next + RIDE_44_MS : 0;
 
-    let bus67 = 0;
-    if (base) {
-      const candidate = state.m67.find((t) => t >= base + 30_000);
-      bus67 = candidate || 0;
-    }
-    const busArr = bus67 ? bus67 + RIDE_67_MS : 0;
+    const bus67 = kw ? nextAfter(state.m67, kw + 15_000) : 0;
+    const bus67Arr = bus67 ? bus67 + cfg.ride67 + cfg.walk67 : 0;
 
-    const useBus = Boolean(busArr && walkArr && busArr <= walkArr - 60_000);
-    const best = useBus ? busArr : walkArr;
+    const walkArr = kw && cfg.walkFromKwai ? kw + cfg.walkFromKwai : 0;
 
-    arriveTimeEl.textContent = best ? clock(best) : "--:--";
+    const b15 = nextAfter(state.b15, now + 60_000);
+    const b15Tiger = nextAfter(state.b15arr, now + 60_000);
+    const b15Arr = b15Tiger
+      ? b15Tiger + cfg.b15Walk
+      : b15
+        ? b15 + cfg.b15Ride + cfg.b15Walk
+        : 0;
+
+    const candidates = [];
+    if (bus67Arr) candidates.push({ key: "bus", t: bus67Arr });
+    if (walkArr) candidates.push({ key: "walk", t: walkArr });
+    if (b15Arr) candidates.push({ key: "b15", t: b15Arr });
+    candidates.sort((a, b) => a.t - b.t);
+    const best = candidates[0] || null;
+
+    arriveTimeEl.textContent = best ? clock(best.t) : "--:--";
     arriveNoteEl.textContent = !best
       ? "等待班次"
-      : useBus
-        ? "坐 67M，最快"
-        : "步行，最快";
+      : best.key === "b15"
+        ? "城巴 B15 最快"
+        : best.key === "bus"
+          ? "67M 最快"
+          : "步行最快";
 
-    optWalkEl.classList.toggle("is-best", Boolean(best) && !useBus);
-    tagWalkEl.hidden = !(best && !useBus);
-    optBusEl.classList.toggle("is-best", Boolean(best) && useBus);
-    tagBusEl.hidden = !(best && useBus);
-
-    walkTimeEl.innerHTML = (walkArr ? clock(walkArr) : "--:--") + "<small>到达</small>";
-    walkDetailEl.textContent = "1.0 km · 约 13 分钟 · 经兆康路 → 屯富路";
+    optBusEl.classList.toggle("is-best", Boolean(best && best.key === "bus"));
+    tagBusEl.hidden = !(best && best.key === "bus");
+    optWalkEl.classList.toggle("is-best", Boolean(best && best.key === "walk"));
+    tagWalkEl.hidden = !(best && best.key === "walk");
+    optB15El.classList.toggle("is-best", Boolean(best && best.key === "b15"));
+    tagB15El.hidden = !(best && best.key === "b15");
 
     if (bus67) {
-      busTimeEl.innerHTML = clock(busArr) + "<small>到达</small>";
-      busDetailEl.textContent = clock(bus67) + " 欣田邨上车 · 3 站 · 约 6 分钟";
+      busTimeEl.innerHTML = clock(bus67Arr) + "<small>到达</small>";
+      busDetailEl.textContent =
+        clock(bus67) + " 欣田邨上车 · " + cfg.stop +
+        " · 步行 " + (cfg.walk67 / 60_000) + " 分钟";
     } else {
       busTimeEl.innerHTML = '<span class="is-empty">--:--</span><small>暂无班次</small>';
-      busDetailEl.textContent = "欣田邨上车 · 3 站 · 约 6 分钟";
+      busDetailEl.textContent = "欣田邨上车 · " + cfg.stop;
     }
 
-    // ---- status line ----
+    if (walkArr) {
+      walkTimeEl.innerHTML = clock(walkArr) + "<small>到达</small>";
+    } else {
+      walkTimeEl.innerHTML = '<span class="is-empty">--:--</span><small>—</small>';
+    }
+
+    if (b15 || b15Tiger) {
+      optB15El.classList.remove("is-off");
+      b15TimeEl.className = "o-time";
+      b15TimeEl.innerHTML = clock(b15Arr) + "<small>到达</small>";
+      if (b15 && b15Tiger) {
+        b15DetailEl.textContent =
+          clock(b15) + " 开出 · " + clock(b15Tiger) + " 到虎地 · 步行 " +
+          cfg.b15WalkMin + " 分钟";
+      } else if (b15) {
+        b15DetailEl.textContent =
+          clock(b15) + " 开出 · " + cfg.b15Note;
+      } else {
+        b15DetailEl.textContent = clock(b15Tiger) + " 到虎地 · 步行 " + cfg.b15WalkMin + " 分钟";
+      }
+    } else {
+      optB15El.classList.remove("is-best");
+      optB15El.classList.add("is-off");
+      b15TimeEl.className = "o-time is-empty";
+      b15TimeEl.innerHTML = "—<small>停开</small>";
+      b15DetailEl.textContent = "仅周六日及公众假期行驶 · " + cfg.b15Note;
+    }
+
+    // ---- status ----
     const age = state.updated ? now - state.updated : Infinity;
-    const ok = age < 90_000 && !state.error;
-    setLive(ok);
+    setLive(age < 90_000 && !state.error);
 
     if (state.error) {
       errorEl.textContent = state.error;
@@ -792,6 +961,11 @@
     }
   }
 
+  function setLive(ok) {
+    liveEl.classList.toggle("is-stale", !ok);
+    liveLabelEl.textContent = ok ? "实时" : "离线";
+  }
+
   async function load() {
     if (loading) return;
     loading = true;
@@ -801,15 +975,19 @@
       getJSON(API.p44),
       getJSON(API.p44kw),
       getJSON(API.m67),
-      getJSON(API.n44b)
+      getJSON(API.n44b),
+      getJSON(API.b15),
+      getJSON(API.b15arr)
     ]);
 
-    const [r44, r44kw, r67, rn44] = results;
+    const [r44, r44kw, r67, rn44, rb15, rb15arr] = results;
 
     if (r44.status === "fulfilled") state.p44 = parseGMB(r44.value);
     if (r44kw.status === "fulfilled") state.p44kw = parseGMB(r44kw.value);
     if (r67.status === "fulfilled") state.m67 = parseKMB(r67.value);
     if (rn44.status === "fulfilled") state.n44b = parseGMB(rn44.value);
+    if (rb15.status === "fulfilled") state.b15 = parseCitybus(rb15.value);
+    if (rb15arr.status === "fulfilled") state.b15arr = parseCitybus(rb15arr.value);
 
     const failures = results.filter((r) => r.status === "rejected").length;
     const anyOk = failures < results.length;
@@ -824,13 +1002,20 @@
 
     if (anyOk) state.updated = Date.now();
 
-    // If the API is reachable but simply has no 44B trips, keep the empty list.
     render();
 
     loading = false;
     refreshBtn.disabled = false;
     nextLoad = Date.now() + REFRESH_MS;
   }
+
+  destButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      dest = btn.dataset.dest === "yeelok" ? "yeelok" : "lingnan";
+      localStorage.setItem("hg-dest", dest);
+      render();
+    });
+  });
 
   refreshBtn.addEventListener("click", () => {
     nextLoad = Date.now() + REFRESH_MS;
