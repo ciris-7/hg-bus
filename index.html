@@ -877,7 +877,10 @@
     const walkArr = kw && cfg.walkFromKwai ? kw + cfg.walkFromKwai : 0;
 
     const b15 = nextAfter(state.b15, now + 60_000);
-    const b15Tiger = nextAfter(state.b15arr, now + 60_000);
+    const expectedTiger = b15 ? b15 + cfg.b15Ride : 0;
+    const b15Tiger = expectedTiger
+      ? state.b15arr.find((t) => Math.abs(t - expectedTiger) <= 5 * 60_000) || 0
+      : 0;
     const b15Arr = b15Tiger
       ? b15Tiger + cfg.b15Walk
       : b15
